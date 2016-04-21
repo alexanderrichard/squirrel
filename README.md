@@ -9,14 +9,16 @@ A more detailed documentation going beyond what is presented in the examples wil
 The framework also provides an implementation of the methods from the following two papers:
 
     A. Richard, J. Gall:
-    A BoW-equivalent Recurrent Neural Network for Action Recognition,
-    in British Machine Vision Conference, 2015
+    Temporal Action Detection using a Statistical Language Model,
+    in IEEE Int. Conf. on Computer Vision and Patter Recognition, 2016
+
+**(Please cite this paper if you use the framework)**
 
 and
 
     A. Richard, J. Gall:
-    Temporal Action Detection using a Statistical Language Model,
-    in IEEE Int. Conf. on Computer Vision and Patter Recognition, 2016
+    A BoW-equivalent Recurrent Neural Network for Action Recognition,
+    in British Machine Vision Conference, 2015
 
 **Please cite this paper if you use the framework.**
 
