@@ -1,0 +1,2 @@
+run the detect.sh script
+the result (detections.txt) should be the same as reference-output.txt

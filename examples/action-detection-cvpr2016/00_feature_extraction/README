@@ -1,0 +1,2 @@
+run extract.sh to extract features.
+the GMM and PCA we used are provided in the directories gmm and pca.
