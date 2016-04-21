@@ -15,7 +15,7 @@ The framework also provides an implementation of the methods from the following 
 and
 
     A. Richard, J. Gall:
-    A BoW-equivalent Recurrent Neural Network for Action Recognition,
+    Temporal Action Detection using a Statistical Language Model,
     in IEEE Int. Conf. on Computer Vision and Patter Recognition, 2016
 
 **Please cite this paper if you use the framework.**
