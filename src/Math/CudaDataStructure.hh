@@ -1,3 +1,18 @@
+/*
+ * Copyright 2016 Alexander Richard
+ *
+ * This file is part of Squirrel.
+ *
+ * Licensed under the Academic Free License 3.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * You should have received a copy of the License along with Squirrel.
+ * If not, see <https://opensource.org/licenses/AFL-3.0>.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 // Copyright 2011 RWTH Aachen University. All rights reserved.
 //
 // Licensed under the RWTH ASR License (the "License");
@@ -12,7 +27,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Used with permission by RWTH University.
+// Used with permission by RWTH Aachen University.
 #ifndef MATH_CUDADATASTRUCTURE_HH_
 #define MATH_CUDADATASTRUCTURE_HH_
 
