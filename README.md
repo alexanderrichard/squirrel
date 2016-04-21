@@ -6,7 +6,7 @@ The neural network module can be used with any kind of data, as long as the data
 
 A more detailed documentation going beyond what is presented in the examples will be added later.
 
-Using this framework, the methods of the following papers can be reimplemented:
+The framework also provides an implementation of the methods from the following two papers:
 
     A. Richard, J. Gall:
     A BoW-equivalent Recurrent Neural Network for Action Recognition,
