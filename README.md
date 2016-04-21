@@ -20,8 +20,6 @@ and
     A BoW-equivalent Recurrent Neural Network for Action Recognition,
     in British Machine Vision Conference, 2015
 
-**Please cite this paper if you use the framework.**
-
 Special thanks go to the Human Language Technology and Pattern Recognition Group from RWTH University for the permission to use their matrix and vector classes from
 
     S. Wiesler, A. Richard, P. Golik, R. Schuter, H. Ney: RASR/NN:
