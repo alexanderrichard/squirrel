@@ -80,7 +80,7 @@ void BaseFeatureProcessor::processEpoch() {
 		processBatch();
 	}
 	Core::Log::os("Processed ") << nProcessedObservations_ << " observations in " << nProcessedMinibatches_ << " mini-batches";
-	if ((nProcessedEpochs_ + 1) % saveFrequency_ == 0) {
+	if ( (saveFrequency_ > 0) && ((nProcessedEpochs_ + 1) % saveFrequency_ == 0) ) {
 		std::stringstream s;
 		s << ".epoch-" << nProcessedEpochs_ + 1;
 		trainer_->network().saveNeuralNetworkParameters(s.str());
