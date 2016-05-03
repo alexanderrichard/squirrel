@@ -524,7 +524,7 @@ void CudaVector<T>::columnwiseSquaredEuclideanDistance(const CudaMatrix<T>& A, c
 		require_eq(nRows_, A.nColumns());
 		require_eq(A.nRows(), v.nRows());
 		setToZero();
-		_cuda_columnwiseSquaredEuclideanDistance(A.d_elem_, A.nRows(), A.nColumns(), v.d_elem_, d_elem_);
+		Cuda::columnwiseSquaredEuclideanDistance(A.d_elem_, A.nRows(), A.nColumns(), v.d_elem_, d_elem_);
 	} else {
 		Precursor::columnwiseSquaredEuclideanDistance(A, v);
 	}
