@@ -247,3 +247,111 @@ void RnnTrainer::processSequenceBatch(MatrixContainer& batchedSequence, LabelVec
 		estimateModelParameters();
 	}
 }
+
+/*
+ * BagOfWordsNetworkTrainer
+ */
+BagOfWordsNetworkTrainer::BagOfWordsNetworkTrainer() :
+		Precursor(),
+		recurrentLayerIndex_(0)
+{}
+
+void BagOfWordsNetworkTrainer::initialize(u32 epochLength) {
+	Precursor::initialize(epochLength);
+	// find index of recurrent layer
+	for (u32 l = 0; l < network().nLayer(); l++) {
+		if (network().layer(l).isRecurrent())
+			recurrentLayerIndex_ = l;
+	}
+	recurrentErrorSignal_.resize(network().layer(recurrentLayerIndex_).nInputPorts());
+	for (u32 port = 0; port < network().layer(recurrentLayerIndex_).nInputPorts(); port++)
+		recurrentErrorSignal_.at(port).initComputation();
+}
+
+void BagOfWordsNetworkTrainer::framewiseErrorBackpropagation() {
+	/* backpropagation through the layers */
+	for (s32 l = (s32)recurrentLayerIndex_ - 1; l >= (s32)firstTrainableLayerIndex_; l--) {
+		network().layer(l).backpropagate();
+	}
+}
+
+void BagOfWordsNetworkTrainer::_updateGradient() {
+	for (u32 l = 0; l <= recurrentLayerIndex_; l++) {
+		for (u32 port = 0; port < network().layer(l).nInputPorts(); port++) {
+			// update the bias gradients
+			if (network().layer(l).useBias() && network().layer(l).isBiasTrainable()) {
+				statistics().biasGradient(network().layer(l).name(), port).addSummedColumns(
+						network().layer(l).latestErrorSignal(port));
+			}
+			// update the weights gradients
+			for (u32 c = 0; c < network().layer(l).nIncomingConnections(port); c++) {
+				if (network().layer(l).isTrainable(c, port)) {
+					u32 sourcePort = network().layer(l).incomingConnection(c, port).sourcePort();
+					u32 destPort = network().layer(l).incomingConnection(c, port).destinationPort();
+					statistics().weightsGradient(network().layer(l).incomingConnection(c, port).name()).addMatrixProduct(
+							network().layer(l).incomingConnection(c, port).from().latestActivations(sourcePort),
+							network().layer(l).incomingConnection(c, port).to().latestErrorSignal(destPort),
+							1.0, 1.0, false, true);
+				}
+			}
+		}
+	}
+}
+
+void BagOfWordsNetworkTrainer::processSequenceBatch(MatrixContainer& batchedSequence, LabelVector& labels) {
+	require_eq(batchedSequence.getLast().nColumns(), labels.nRows());
+
+	/* initial steps for the sequence batch */
+	// set the history length (number of time frames that are memorized)
+	network().setMaximalMemory(2);
+	// ensure everything is in computing state
+	labels.initComputation();
+	network().initComputation();
+	statistics().initComputation();
+
+	/* compute error signal of the sequence-length-normalization layer */
+	// forward the sequence
+	network().forwardSequence(batchedSequence);
+	// compute initial error signal
+	computeInitialErrorSignal(labels);
+	// error backpropagation
+	errorBackpropagation();
+	// update gradient for time frame T
+	updateGradient(1);
+	statistics().addToObjectiveFunction(computeObjectiveFunction(labels));
+	statistics().increaseNumberOfClassificationErrors(network().outputLayer().latestActivations(0).nClassificationErrors(labels));
+	statistics().increaseNumberOfObservations(batchedSequence.getLast().nColumns());
+
+	// if any layer before recurrent layer index is trainable, proceed with these layers
+	if (firstTrainableLayerIndex_ <= recurrentLayerIndex_) {
+		// store error signal of recurrent layer
+		for (u32 port = 0; port < network().layer(recurrentLayerIndex_).nInputPorts(); port++) {
+			recurrentErrorSignal_.at(port).copyStructure(network().layer(recurrentLayerIndex_).latestErrorSignal(port));
+			recurrentErrorSignal_.at(port).copy(network().layer(recurrentLayerIndex_).latestErrorSignal(port));
+		}
+		/* update the gradient for all remaining time frames */
+		network().reset();
+		network().setMaximalMemory(1);
+		for (u32 t = 0; t < batchedSequence.nTimeframes() - 1; t++) {
+			// forward input up to recurrentLayerIndex_ - 1
+			network().forward(batchedSequence.at(t), recurrentLayerIndex_ - 1);
+			network().layer(recurrentLayerIndex_).addTimeframe(batchedSequence.at(t).nColumns());
+			// set the error signal for the recurrent layer
+			for (u32 port = 0; port < network().layer(recurrentLayerIndex_).nInputPorts(); port++) {
+				u32 nCols = network().layer(recurrentLayerIndex_).latestErrorSignal(port).nColumns();
+				network().layer(recurrentLayerIndex_).latestErrorSignal(port).resize(
+						recurrentErrorSignal_.at(port).nRows(), recurrentErrorSignal_.at(port).nColumns());
+				network().layer(recurrentLayerIndex_).latestErrorSignal(port).copy(recurrentErrorSignal_.at(port));
+				network().layer(recurrentLayerIndex_).latestErrorSignal(port).setVisibleColumns(nCols);
+			 }
+			// compute the remaining error signals and update the gradient
+			framewiseErrorBackpropagation();
+			_updateGradient();
+		}
+	}
+
+	/* estimate the model parameters */
+	if ((modelUpdateStrategy_ == afterBatch) || (epochLength_ <= statistics().nObservations())) {
+		estimateModelParameters();
+	}
+}

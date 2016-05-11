@@ -24,7 +24,7 @@ using namespace Nn;
  * Trainer
  */
 const Core::ParameterEnum Trainer::paramTrainer_("trainer",
-		"dummy, forwarder, feed-forward-trainer, rnn-trainer",
+		"dummy, forwarder, feed-forward-trainer, rnn-trainer, bag-of-words-network-trainer",
 		"dummy", "");
 
 Trainer::Trainer() :
@@ -88,6 +88,10 @@ Trainer* Trainer::createFramewiseTrainer() {
 		std::cerr << "The selected trainer is no frame-wise trainer. Abort." << std::endl;
 		exit(1);
 		break;
+	case bowTrainer:
+		std::cerr << "The selected trainer is no frame-wise trainer. Abort." << std::endl;
+		exit(1);
+		break;
 	case dummy:
 	default:
 		trainer = new DummyTrainer();
@@ -110,6 +114,10 @@ Trainer* Trainer::createSequenceTrainer() {
 	case rnnTrainer:
 		Core::Log::os("Create rnn-trainer.");
 		trainer = new RnnTrainer();
+		break;
+	case bowTrainer:
+		Core::Log::os("Create bag-of-words-network-trainer.");
+		trainer = new BagOfWordsNetworkTrainer();
 		break;
 	case dummy:
 	default:

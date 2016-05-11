@@ -100,6 +100,30 @@ public:
 	virtual void processSequenceBatch(MatrixContainer& batchedSequence, LabelVector& labels);
 };
 
+/*
+ * neural network trainer for bag-of-words neural networks (networks with just one recurrent identity/sequence-length-normalization layer)
+ */
+class BagOfWordsNetworkTrainer : public GradientBasedTrainer
+{
+private:
+	typedef GradientBasedTrainer Precursor;
+private:
+	std::vector<Matrix> recurrentErrorSignal_;	// store recurrent error signal for each port of the recurrent layer
+	u32 recurrentLayerIndex_;
+	virtual void framewiseErrorBackpropagation();
+	virtual void _updateGradient();
+public:
+	BagOfWordsNetworkTrainer();
+	virtual ~BagOfWordsNetworkTrainer() {}
+	virtual void initialize(u32 epochLength = 0);
+	/*
+	 * compute the gradient for the feature sequences in the current batch
+	 * @param batch contains the feature sequences (one matrix corresponds to one sequence)
+	 * @param labels contains the corresponding labels
+	 */
+	virtual void processSequenceBatch(MatrixContainer& batchedSequence, LabelVector& labels);
+};
+
 } // namespace
 
 #endif /* NN_GRADIENTBASEDTRAINER_HH_ */

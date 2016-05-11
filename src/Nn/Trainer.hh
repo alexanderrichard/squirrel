@@ -33,7 +33,7 @@ class Trainer
 {
 private:
 	static const Core::ParameterEnum paramTrainer_;
-	enum TrainerType { dummy, forwarder, feedForwardTrainer, rnnTrainer };
+	enum TrainerType { dummy, forwarder, feedForwardTrainer, rnnTrainer, bowTrainer };
 protected:
 	NeuralNetwork network_;
 	Estimator* estimator_;
