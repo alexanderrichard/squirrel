@@ -1,0 +1,6 @@
+2017-07-07.18-33-45 cp /media/work/video_analytics/vgg/config/training.config .
+2017-07-07.18-33-48 cp /media/work/video_analytics/vgg/config/forward.config .
+2017-07-07.18-33-51 cp /media/work/video_analytics/vgg/config/network.config .
+2017-07-07.18-42-17 vim network.config 
+2017-07-07.18-42-34 vim network.config 
+2017-07-07.18-44-44 vim training.config 

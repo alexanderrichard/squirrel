@@ -1,0 +1,22 @@
+CNN EXAMPLE ON MNIST
+
+config/network.config:
+The configuration of the CNN
+
+config/training.config:
+The configuration for the neural network training
+
+config/forward.config:
+The configuration for the evaluation
+
+
+RUN THE EXAMPLE
+
+(1) Get the data: run "./download_mnist.py"
+
+(2) Train the network: run "./train.sh"
+model files will be stored in "results/", the log file can be found in "log/training.log"
+
+(3) Evaluate the model: run "./evaluate.sh"
+the log file including the classification error can be found in "log/forwarding.log"
+the classification error rate is at the end of the file

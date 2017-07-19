@@ -1,0 +1,295 @@
+The \texttt{Core} module offers several classes that are used in most other modules. Particularly, it provides functionality to read \texttt{config} files, define external parameters in classes, write \texttt{log} files, print error messages, and to create instances for easy file I/O.
+
+\section{Types}
+
+\coderef{Core/Types.hh}
+
+Defines the typenames of variables used throughout the framework, \eg \texttt{u32} for \texttt{unsigned int} or \texttt{f32} for a $ 32 $-bit \texttt{float}. Moreover, the following functions return type limits and \texttt{NaN} checks:
+
+\begin{fdoc}{static const T min()}
+    \descr{return the minimal value for a variable of type \texttt{T}, \eg \texttt{Types::min<f32>()} is the most negative float number possible}
+\end{fdoc}
+
+\begin{fdoc}{static const T max()}
+    \descr{return the maximal value for a variable of type \texttt{T}}
+\end{fdoc}
+
+\begin{fdoc}{static const T absmin()}
+    \descr{return the smallest value in magnitude for type \texttt{T}, \eg \texttt{Types::absmin<f32>()} is the positive float value closest to zero}
+\end{fdoc}
+
+\begin{fdoc}{static const bool isNan(T value)}
+    \param{value}{a floating point number}
+    \param{return}{\texttt{true} if \texttt{value = NaN}, else \texttt{false}}
+\end{fdoc}
+
+\begin{fdoc}{static const T inf()}
+    \descr{return the $ \infty $ representation of a floating point type \texttt{T}}
+\end{fdoc}
+
+
+\section{Configuration and Parameters}
+
+\coderef{Configuration.hh and Parameters.hh}
+
+The framework offers an easy way to define parameters within classes and to read them from the command line or from a config file.
+
+\subsection{Specifying Parameters in the Code}
+
+There is a parameter class for a variety of primitive datatypes:
+
+\begin{fdoc}[0.3]{Parameter specifications}
+    \param{Core::ParameterInt}{a \texttt{s32} (signed int) parameter}
+    \param{Core::ParameterFloat}{a \texttt{f32} ($ 32 $-bit float) parameter}
+    \param{Core::ParameterChar}{a \texttt{char} parameter}
+    \param{Core::ParameterBool}{a \texttt{bool} parameter}
+    \param{Core::ParameterString}{a \texttt{std::string} parameter}
+    \param{Core::ParameterIntList}{a \texttt{std::vector<s32>} parameter}
+    \param{Core::ParameterFloatList}{a \texttt{std::vector<f32>} parameter}
+    \param{Core::ParameterCharList}{a \texttt{std::vector<char>} parameter}
+    \param{Core::ParameterBoolList}{a \texttt{std::vector<bool>} parameter}
+    \param{Core::ParameterStringList}{a \texttt{std::vector<std::string} parameter}
+    \param{Core::ParameterEnum}{an \texttt{enum} parameter with some special properties, see below}
+\end{fdoc}
+
+In the code, each of these parameters can be instanciated in the same way. All primitive types and all list types follow the same concept, which is here illustrated with \texttt{ParameterFloat} and \texttt{ParameterFloatList}.
+
+Consider the following class definition in a header file \texttt{MyClass.hh}:
+\begin{code}
+#include <Core/CommonHeaders.hh>
+
+class MyClass {
+private:
+    static const Core::ParameterFloat myFloatParam_;
+    static const Core::ParameterFloatList myFloatListParam_;
+    Float myFloat_;
+    std::vector<Float> myFloatList_;
+public:
+    MyClass();
+}
+\end{code}
+
+The parameter instanciation in \texttt{MyClass.cc} looks like this:
+\begin{code}
+#include "MyClass.hh"
+
+const Core::ParameterFloat MyClass::myFloatParam_("my-float", 0.0, "foo");
+const Core::ParameterFloatList MyClass::myFloatListParam_("my-float-list",
+                                                  "1.0, 2.0, 3.0", "foo");
+// constructor
+MyClass::MyClass() :
+    myFloat_(Core::Configuration::config(myFloatParam_);
+    myFloatList_(Core::Configuration::config(myFloatListParam_, "bar");
+{}
+\end{code}
+
+There are three values passed to the specific parameter class. The first is the name of the parameter, the second is a default value, and the third is a prefix. So, when running the program with
+\begin{verbatim}
+    ./program --foo.my-float=1.0
+\end{verbatim}
+the value of \texttt{myFloat\_} will be set to $ 1.0 $ in the constructor, while \texttt{myFloatList\_} will back up to the default values which is the list $ [1.0, 2.0, 3.0] $. The third parameter, the prefix, can also be altered by specifying another value when getting the parameter with \texttt{Core::Configuration::config(...)} in the constructor. Particularly,
+\begin{verbatim}
+    ./program --bar.my-float-list=2.0,4.0
+\end{verbatim}
+would result in \texttt{myFloatList\_} being the list $ [2.0, 4.0] $, whereas
+\begin{verbatim}
+    ./program --foo.my-float-list=2.0,4.0
+\end{verbatim}
+would not be the correct path to address the \texttt{my-float-list} parameter, so in the end \texttt{myFloatList\_} would contain the default value $ [1.0, 2.0, 3.0] $. Be aware that for list parameters, the default option is always given as a comma separated string.
+
+\subsubsection*{ParameterEnum}
+
+\texttt{ParameterEnum} allows to use \texttt{enums} as configurable parameters. The parameter configuration is quite similar to the regular parameters, but has some special requirements. A simple example will show the difference.
+
+\begin{code}
+// Header file MyClass.hh
+#include <Core/CommonHeaders.hh>
+
+class MyClass {
+private:
+    static const Core::ParameterEnum myEnumParam_;
+    enum MyEnum { optionA, optionB, optionC };
+    MyEnum option_;
+public:
+    MyClass();
+}
+\end{code}
+
+\begin{code}
+// Source file MyClass.cc
+#include "MyClass.hh"
+
+const Core::ParameterEnum MyClass::myEnumParam_(
+                       "my-enum", "optionA, optionB, optionC", "optionA", "foo");
+// constructor
+MyClass::MyClass() :
+    option_((MyEnum) Core::Configuration::config(myEnumParam_))
+{}
+\end{code}
+For \texttt{ParameterEnum}, four arguments are required. The first is again the parameter name, the second is the list of all possible options, the third is the default option, and the fourth is again the prefix to address the parameter. Note that the second parameter, the list of options, has to be in the same order as the options defined in \texttt{MyEnum}.
+
+
+\subsection{Command Line Parameters and Configuration Files}
+
+Passing parameters to the program is possible via two ways: either as command line parameters or via \texttt{config} files.
+
+\subsubsection*{Command Line Parameters}
+
+Command line parameters can be given in the format
+\begin{verbatim}
+    --prefix.parameter-name=value
+\end{verbatim}
+or
+\begin{verbatim}
+    --*.parameter-name=value
+\end{verbatim}
+Whitespaces and tabs are not allowed for command line parameters.
+
+\subsubsection*{Config Files}
+
+A config file can be passed to the program using the command line parameter \texttt{--config=<config-file>}.
+Config files are read line-by-line with the following specification, where tabs and whitespaces are ignored:
+
+\paragraph{Comments}
+\texttt{\#} starts a comment:
+\begin{verbatim}
+    # this is a comment
+    parameter-name = value # this is another comment
+\end{verbatim}
+Comments can be anywhere in the config file. Everything in a line coming after a \texttt{\#} will be ignored.
+
+\paragraph{Includes}
+Other configuration files can be included via
+\begin{verbatim}
+    include myConfigFile.config
+\end{verbatim}
+
+\paragraph{Parameters}
+Parameters can be specified via
+\begin{verbatim}
+    prefix-path.parameter-name = parameter-value
+\end{verbatim}
+or
+\begin{verbatim}
+    *.parameter-name = parameter-value
+\end{verbatim}
+First, it is searched for <prefix-path.parameter-name>, then for <*.parameter-name>. If none of them are found, the default value is used for the parameter
+
+\paragraph{Global Prefixes}
+Global prefixes can be defined via
+\begin{verbatim}
+    [global-prefix]
+\end{verbatim}
+All following parameter specifications are assumed to have this global prefix, e.g.
+\begin{verbatim}
+    [global-prefix]
+    parameter-name = parameter-value
+\end{verbatim}
+is interpreted as \texttt{global-prefix.parameter-path.parameter-name = parameter-value}.
+The global prefix is valid until a new one is defined. \texttt{[]} resets the prefix, \ie
+\begin{verbatim}
+    []
+    parameter-name = parameter-value
+\end{verbatim}
+is interpreted as \texttt{--paramter-name=parameter-value} (without any preceding context).
+
+For examples, see a \texttt{config} file of one of the example setups.
+
+
+\subsection{Log and Error Messages}
+
+\coderef{Core/Log.hh and Core/Error.hh}
+
+The interfaces for log and error messages are very simple to use. In case of an error, use this syntax:
+\begin{code}
+    if (error_condition) {
+        Core::Error::msg("Something happend") << Core::Error::abort;
+    }
+\end{code}
+The error message will be printed and the program exits.
+
+For log messages, use the following syntax:
+\begin{code}
+    u32 x = 10;
+    // one line log message
+    Core::Log::os("Variable x has value") << x;
+    // xml-style log message
+    Core::Log::openTag("my-tag");
+    Core::Log::os("Variable x has value") << x;
+    Core::Log::closeTag();
+\end{code}
+The output of this is
+\begin{verbatim}
+    Variable x has value 10
+    <my-tag>
+        Variable x has value 10
+    </my-tag>
+\end{verbatim}
+By default, log messages are written to \texttt{stdout}. If you want to write them to a file, specify the variable \texttt{log-file=<filename>}.
+
+
+\subsection{File I/O: IOStream}
+
+\coderef{Core/IOStream.hh}
+
+The \texttt{IOStream} class provides a simple interface for file I/O on binary, gzipped, and ascii files. There is a \texttt{AsciiStream}, a \texttt{CompressedStream}, and a \texttt{BinaryStream}, all implementing the same functions defined in \texttt{IOStream} for file handling.
+
+\begin{fdoc}{void open(const std::string\& filename, const std::ios\_base::openmode mode)}
+    \descr{opens a file handle}
+    \param{filename}{the name of the file to be opened}
+    \param{openmode}{either \texttt{std::ios::in} or \texttt{std::ios::out} for input or output}
+\end{fdoc}
+
+\begin{fdoc}{bool is\_open()}
+    \descr{return true if file is open}
+\end{fdoc}
+
+\begin{fdoc}{void close()}
+    \descr{close the opened file}
+\end{fdoc}
+
+\begin{fdoc}{bool eof()}
+    \descr{return true if openmode is \texttt{std::ios::in} and end-of-file is reached}
+\end{fdoc}
+
+\begin{fdoc}{void endl(std::ostream\& stream)}
+    \descr{\texttt{std::endl} version for the \texttt{IOStream} interface}
+\end{fdoc}
+
+\begin{fdoc}{IOStream\& operator<<(u8)}
+    \descr{write a \texttt{u8} unsigned short to the file and return a reference to the \texttt{IOStream} object. The same function also exists for datatypes \texttt{u32}, \texttt{u64}, \texttt{s8}, \texttt{s32}, \texttt{s64}, \texttt{f32}, \texttt{f64}, \texttt{bool}, \texttt{char}, \texttt{const char*}, \texttt{std::string}.}
+\end{fdoc}
+
+\begin{fdoc}{IOStream\& operator>>(u8\&)}
+    \descr{read a \texttt{u8} unsigned short from the file and return a reference to the \texttt{IOStream} object. The same function also exists for datatypes \texttt{u32}, \texttt{u64}, \texttt{s8}, \texttt{s32}, \texttt{s64}, \texttt{f32}, \texttt{f64}, \texttt{bool}, and \texttt{char}.}
+\end{fdoc}
+
+\begin{fdoc}{bool getline(std::string\&)}
+    \descr{read a \textbackslash n-terminated string from the file and return \texttt{true} on success}
+\end{fdoc}
+
+\subsubsection*{Code Example}
+
+\begin{code}
+/* 
+ * content of inputfile.txt:
+ * Hello World.
+ * 10
+ *
+ */
+#include <Core/IOStream.hh>
+
+u32 x;
+std::string line;
+
+// read input from ascii file
+Core::AsciiStream in("inputfile.txt", std::ios::in);
+in.getline(line); // read 'Hello World'
+in >> x; // read '10'
+
+// write to gzipped file
+Core::CompressedStream out("outputfile.gz", std::ios::out);
+out << x;
+out << line;
+\end{code}
+

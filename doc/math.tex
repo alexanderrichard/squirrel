@@ -1,0 +1,338 @@
+In this chapter, the basic functions of the classes \texttt{Math::Matrix} and \texttt{Math::Vector} are documented.
+
+%%% Math::Matrix %%%
+\section{Math::Matrix}
+
+\begin{fdoc}{Math::Matrix<T>(u32 rows, u32 cols)}
+    \descr{constructor. \texttt{rows} $ \times $ \texttt{cols} elements of type \texttt{T} (usually \texttt{Float}) are allocated.}
+    \param{rows}{an u32 specifying the number of rows}
+    \param{cols}{an u32 specifying the number of cols}
+\end{fdoc}
+
+\subsection{Helper functions for Neural Networks}
+
+\begin{fdoc}{void Math::Matrix::sigmoid(T gamma = 1.0)}
+    \descr{applies the sigmoid function ($sigmoid(x)=\frac{1}{1+e^{-\gamma x}}$), to each element of the matrix}
+    \param{gamma}{the scaling factor for the sigmoid function. Default is $ 1.0 $}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::triangle()}
+    \descr{applies the triangle function ($triangle(x)= |x|\ if\ -1\leq x\leq 1;\ 0\ else$), to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::softmax()}
+    \descr{applies the softmax function ($softmax(x_{ij})= \frac{e^{x_{ij}}}{\sum_k e^{x_{ik}}}$, where $x_{ij}$ is j-th number in i-th column), columnwise to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Matrix::sum()}
+    \descr{returns sum of each element of the matrix.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::max()}
+    \descr{applies the max function ($max(x_{ij}) = 1\ if\ x_{ij}\geq x_{ik}\ \forall k;\ 0\ else$, where $x_{ij}$ is j-th number in the i-th column), columnwise to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::max(const Matrix<T> \&A, const Matrix<T> \&B)}
+    \descr{assigns elementwise maximum from A and B to this matrix e.g $this_{ij} = maximum(A_{ij}, B_{ij})$}
+    \param{A}{the first input matrix}
+    \param{B}{the second input matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::tanh()}
+    \descr{applies the hyperbolic tangent function to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Matrix::elementwiseMultiplicationWithSigmoidDerivative(\\const Matrix<T> \&X)}}
+    \descr{multiplies each element of this matrix with the derivative of the sigmoid function. e.g. $this_{ij}=this_{ij} * (X_{ij} * (1 - X_{ij}))$}
+    \param{X}{The output of the sigmoid function}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Matrix::elementwiseMultiplicationWithTanhDerivative(\\const Matrix<T> \&X)}}
+    \descr{multiplies each element of this matrix with the derivative of the tanh function. e.g. $this_{ij}=this_{ij} * (1 - X_{ij}^2)$}
+    \param{X}{The output of the tanh function}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Matrix::elementwiseMultiplicationWithLogDerivative(\\const Matrix<T> \&X)}}
+    \descr{multiplies each element of this matrix with the derivative of the log function. e.g. $this_{ij}=this_{ij} / e^{X_{ij}}$}
+    \param{X}{The output of the log function}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Matrix::elementwiseMultiplicationWithSignedPowDerivative(\\const Matrix<T> \&X, T p)}}
+    \descr{multiplies each element of this matrix with the derivative of the signedPower function. e.g. $this_{ij}=this_{ij} \times p \times |X_{ij}|^{p-1}$}
+    \param{X}{The input of the signedPower function}
+    \param{p}{The exponent}
+\end{fdoc}
+
+\subsection{General mathematical functions}
+
+\begin{fdoc}{void Math::Matrix::exp()}
+    \descr{exponentiate each element of the matrix e.g. ($exp(x) = e^{x}$)}
+\end{fdoc}
+    
+\begin{fdoc}{void Math::Matrix::signedPow(T p)}
+    \descr{applies power function to the absolute value of each element of the matrix and keeps the original sign e.g. $signedPow(x, p) = |x|^p\ if\ x\geq 0; -|x|^p\ else$ }
+    \param{p}{the exponent}
+    
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::log()}
+    \descr{applies the natural logrithm function to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::sin()}
+    \descr{applies the sin function to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::cos()}
+    \descr{applies the cos function to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::asin()}
+    \descr{applies the arcsin function to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::acos()}
+    \descr{applies the arccos function to each element of the matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::abs()}
+    \descr{updates each element of the matrix with its absolute value}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Matrix::maxValue() const}
+    \descr{returns the maximum value in the matrix}
+\end{fdoc}
+
+\begin{fdoc}{u32 Math::Matrix::argAbsMin(u32 column) const}
+    \descr{returns the index of the minimum absolute value in the column}
+    \param{column}{the index of the column}
+\end{fdoc}
+
+\begin{fdoc}{u32 Math::Matrix::argAbsMax(u32 column) const}
+    \descr{returns the index of the maximum absolute value in the column}
+    \param{column}{the index of the column}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::argMax(Vector<S>\& v) const}
+    \descr{saves the index of maximum value from each column of the matrix in rows of the vector }
+    \param{v}{the vector which will contain the indecies of maximum values of columns}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::elementwiseMultiplication(const Matrix<T> \&X)}
+    \descr{multiplies each element of this matrix with corresponding element of the input matrix e.g. $ this_{ij} = this_{ij} \times X_{ij} $}
+    \param{X}{the input matrix}
+\end{fdoc}
+
+
+\begin{fdoc}{void Math::Matrix::elementwiseDivision(const Matrix<T> \&X)}
+    \descr{divides each element of this matrix by corresponding element of the input matrix e.g. $ this_{ij} = this_{ij} / X_{ij} $}
+    \param{X}{the input matrix}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::addConstantElementwise(T C)}
+    \descr{adds the input constant C to each element of this matrix e.g. $ this_{ij} = this_{ij} + C $}
+    \param{C}{the input constant}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::addToColumn(const Vector<T> \&v, u32 column, T alpha = 1.0)}
+    \descr{adds a scaled vector to a column of this matrix}
+    \param{v}{the input vector}
+    \param{column} {index of column to which vector should be added}
+    \param{alpha} {scale factor. Default is $ 1.0 $}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::addToRow(const Vector<T> \&v, u32 row, T alpha = 1.0)}
+    \descr{adds a scaled vector to a row of this matrix}
+    \param{v}{the input vector}
+    \param{row} {index of row to which vector should be added}
+    \param{alpha} {scale factor. Default is $ 1.0 $}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::multiplyColumnByScalar(u32 column, T alpha)}
+    \descr{multiplies a column of this matrix by a scalar}
+    \param{column}{the index of the column}
+    \param{alpha}{input scalar}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::multiplyRowByScalar(u32 row, T alpha)}
+    \descr{multiplies a row of this matrix by a scalar}
+    \param{row}{the index of the row}
+    \param{alpha}{input scalar}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::addToAllColumns(const Vector<T> \&v, T alpha = 1.0)}
+    \descr{adds a scaled vector to all columns of this matrix}
+    \param{v}{the input vector}
+    \param{alpha} {scale factor. Default is $ 1.0 $}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::addToAllRows(const Vector<T> \&v, T alpha = 1.0)}
+    \descr{adds a scaled vector to all rows of this matrix}
+    \param{v}{the input vector}
+    \param{alpha} {scale factor. Default is $ 1.0 $}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::multiplyColumnsByScalars(const Vector<T> \&scalars)}
+    \descr{scales each column of this matrix by a scalar, e.g. $this.col_i = this.col_i \times scalars_i$}
+    \param{scalars}{the input vector, that contains scalars}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::divideColumnsByScalars(const Vector<T> \&scalars)}
+    \descr{divides each column of this matrix by a scalar, e.g. $this.col_i = this.col_i / scalars_i$}
+    \param{scalars}{the input vector, that contains scalars}
+\end{fdoc}
+
+
+\begin{fdoc}{void Math::Matrix::multiplyRowsByScalars(const Vector<T> \&scalars)}
+    \descr{scales each row of this matrix by a scalar, e.g. $this.row_i = this.row_i \times scalars_i$}
+    \param{scalars}{the input vector, that contains scalars}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Matrix::divideRowsByScalars(const Vector<T> \&scalars)}
+    \descr{divides each row of this matrix by a scalar, e.g. $this.row_i = this.row_i / scalars_i$}
+    \param{scalars}{the input vector, that contains scalars}
+\end{fdoc}
+
+%%% Math::Vector %%%
+\section{Math::Vector}
+\begin{fdoc}{void Math::Vector::addConstantElementwise(T c)}
+    \descr{adds a constant to each element of this vector, e.g. $this_i = this_i + c$}
+    \param{c}{a constant to add to each element}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::scale(T value)}
+    \descr{scales this vector, e.g. $this_i = value \times this_i$}
+    \param{value}{the scaling factor.}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Vector::sumOfSquares() const}
+    \descr{returns the sum of squares of this vector, e.g. $return\ this^T\times this$}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Vector::dot(const Vector<T>\& vector) const}
+    \descr{returns scalar/dot product of this vector with the given vector, e.g. $return\ this^T\times vector$}
+    \param{vector}{the input vector.}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Vector::columnwiseSquaredEuclideanDistance(const Matrix<T>\& A, \\const Vector<T>\& v)}}
+    \descr{computes the squared Euclidean distance of each column vector of the input matrix with the input vector, and stores results in this vector, e.g. $this_i = (A_i-v)^T(A_i-v)$}
+    \param{A}{the input matrix.}
+    \param{v}{the input vector.}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Vector::multiply(const Matrix<T> \&A, const Vector<T> \&x, \\ bool transposed = false, T alpha = 1.0, \\ T beta = 0.0, u32 lda = 0) const}}
+    \descr{multiplies the input matrix or its transpose with the input vector and stores the result in this vector, e.g. $this = \alpha A x + \beta this$ or $this = \alpha A^T  x + \beta this$}
+    \param{A}{the input matrix.}
+    \param{x}{the input vector.}
+    \param{transposed}{the input matrix should be transposed or not.}
+    \param{alpha}{the scaling factor for the input matrix. Default is 1.0}
+    \param{beta}{the scaling factor for the this vector. Default is 0.0}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Vector::columnwiseInnerProduct(const Matrix<T>\& A,\\ const Matrix<T>\& B)}}
+    \descr{computes inner product of each column vector of matrix A with the corresponding column vector of matrix B, and stores results in this vector, e.g. $this_i = A_i^TB_i$}
+    \param{A}{the input matrix A}
+    \param{B}{the input matrix B}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::elementwiseMultiplication(const Vector<T>\& v)}
+    \descr{multiplies each element of this vector with the corresponding element of the input vector, e.g. $this_i = this_i \times v_i$}
+    \param{v}{the input vector.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::elementwiseDivision(const Vector<T>\& v)}
+    \descr{divides each element of this vector with the corresponding element of the input vector, e.g. $this_i = this_i / v_i$}
+    \param{v}{the input vector.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::elementwiseDivision(const Vector<T>\& v)}
+    \descr{divides each element of this vector with the corresponding element of the input vector, e.g. $this_i = this_i / v_i$}
+    \param{v}{the input vector.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::setToZero()}
+    \descr{sets each element of this vector to zero, e.g. $\forall i\ this_i = 0$}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::fill(T value)}
+    \descr{sets each element of this vector to the input value, e.g. $\forall i\ this_i = value$}
+    \param{value}{the input value.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::ensureMinimalValue(const T threshold)}
+    \descr{sets each element of this vector less than the threshold to threshold, e.g. $\forall i\ this_i = this_i\ if\ this_i\geq threshold; threshold\ else$}
+    \param{threshold}{the input threshold.}
+\end{fdoc}
+
+\begin{fdoc}{u32 Math::Vector::argAbsMin() const}
+    \descr{returns the index of absolute minimum value.}
+\end{fdoc}
+
+\begin{fdoc}{u32 Math::Vector::argAbsMax() const}
+    \descr{returns the index of absolute maximum value.}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Vector::max() const}
+    \descr{returns the maximum value.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::exp() const}
+    \descr{applies the exponential function to each element of this vector, e.g $this_i = e^{this_i}$}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::signedPow(T p)}
+    \descr{applies the signed power function to each element of this vector, e.g. $this_i = this_i^p\ if\ this_i\geq 0; -|this_i|^p\ else$}
+    \param{p}{the exponent.}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::log() const}
+    \descr{applies the log function to each element of this vector, e.g $this_i = log(this_i)$}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::abs() const}
+    \descr{applies the absolute function to each element of this vector, e.g $this_i = |this_i|$}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Vector::asum() const}
+    \descr{returns the absolute sum over each element of this vector or L1 Norm of this vector, e.g. $return\ \sum_i |this_i|$}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Vector::l1norm() const}
+    \descr{returns the absolute sum over each element of this vector or L1 Norm of this vector, e.g. $return\ \sum_i |this_i|$}
+\end{fdoc}
+
+\begin{fdoc}{T Math::Vector::sum() const}
+    \descr{returns the sum over each element of this vector, e.g. $return\ \sum_i this_i$}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Vector::addSummedColumns(const Matrix<T>\& matrix,\\ const T scale = 1.0) const}}
+    \descr{adds scaled column vectors of the input matrix to this vector, e.g. $this = this + \sum_i scale \times matrix.col_i$}
+    \param{matrix}{the input matrix}
+    \param{scale}{the scale factor. Default is 1.0}
+\end{fdoc}
+
+\begin{fdoc}{\shortstack{void Math::Vector::addSquaredSummedColumns(const Matrix<T>\& matrix,\\ const T scale = 1.0) const}}
+    \descr{adds scaled squared (elementwise) column vectors of the input matrix to this vector, e.g. $this = this + \sum_i scale \times matrix.col_i \odot matrix.col_i$}
+    \param{matrix}{the input matrix}
+    \param{scale}{the scale factor. Default is 1.0}
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::addSummedRows(const Matrix<T>\& matrix, const T scale = 1.0) }
+    \descr{adds scaled row vector of the input matrix to this vector, e.g. $this = this + \sum_i scale\times matrix.row_i$}
+    \param{matrix}{the input matrix}
+    \param{scale}{the scale factor. Default is 1.0}    
+\end{fdoc}
+
+\begin{fdoc}{void Math::Vector::getMaxOfColumns(const Matrix<T>\& X) }
+    \descr{saves the maximum of each column vector of the input matrix in this vector, e.g. $this_i = max(X.col_i)$}
+    \param{X}{the input matrix}
+\end{fdoc}
+
+\begin{fdoc}{T normEuclidean() const}
+    \descr{returns the Euclidean norm of this vector, e.g. $return\ \sqrt{this^Tthis}$}
+\end{fdoc}
+
+\begin{fdoc}{T chiSquareDistance(const Vector<T>\& v) const}
+    \descr{returns the chi square distance of this vector with the input vector, e.g. $return\ \sum_i (this_i - v_i)^2 / (this_i + v_i)$}
+    \param{v}{the input vector.}
+\end{fdoc}

@@ -1,0 +1,39 @@
+2017-05-18.15-28-34 cp /media/work/richard/kuehne/setups_fromScratch/weak-learning/gru-gtHmm-new-features/split1/config/network.config .
+2017-05-18.15-30-05 vim network.config 
+2017-05-18.15-33-46 vim viterbi.config
+2017-05-18.15-34-37 vim network.config 
+2017-05-18.15-34-39 vim network.config 
+2017-05-18.16-12-43 vim viterbi.config 
+2017-05-18.16-34-53 vim viterbi.config 
+2017-05-18.16-38-07 vim network.config 
+2017-05-18.16-38-40 vim viterbi.config 
+2017-05-18.16-51-36 cp network.config network.config.bk
+2017-05-18.16-52-18 vim network.config
+2017-05-19.13-32-28 mv network.config.bk network.config
+2017-05-19.13-32-57 vim network.config 
+2017-05-19.13-33-04 vim viterbi.config 
+2017-05-22.19-23-42 vim network.config 
+2017-05-22.19-24-29 vim viterbi.config 
+2017-05-24.14-53-33 vim training.config 
+2017-05-29.17-23-25 cp viterbi.config realign.config
+2017-05-29.17-25-46 vim realign.config 
+2017-05-29.17-25-47 qstat
+2017-05-29.17-25-54 htop
+2017-05-29.17-25-56 htop
+2017-05-29.19-40-46 cp realign.config decode.config
+2017-05-29.19-42-59 vim decode.config 
+2017-05-29.19-43-03 rm viterbi.config 
+2017-05-30.16-37-48 vim training.config 
+2017-05-30.16-37-52 vim realign.config 
+2017-05-30.16-37-56 vim network.config 
+2017-05-30.16-38-00 vim decode.config 
+2017-07-17.17-11-25 vim training.config 
+2017-07-17.17-11-37 vim network.config 
+2017-07-17.17-11-58 vim realign.config 
+2017-07-17.17-12-10 vim decode.config 
+2017-07-17.17-12-18 vim realign.config 
+2017-07-17.17-12-34 vim grammar.config 
+2017-07-17.17-12-41 vim decode.config 
+2017-07-17.17-12-50 vim network.config 
+2017-07-17.17-16-30 vim realign.config 
+2017-07-17.17-16-34 vim training.config 

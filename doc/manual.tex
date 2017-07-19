@@ -1,0 +1,83 @@
+\documentclass[a4paper, 10pt]{scrreprt}
+\usepackage[left=3cm, right=3cm]{geometry}
+
+\usepackage[table]{xcolor}
+\usepackage{minted}
+\usepackage{color}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{verbatim}
+
+\def\ie{i.e.\ }
+\def\eg{e.g.\ }
+
+% environment for config
+\newenvironment{config}
+{
+    \vspace{1mm}
+    \hrule
+    \vspace{1mm}
+    \verbatim}
+{
+    \endverbatim
+    \hrule
+    \vspace{3mm}
+}
+
+% environment for c++ code
+\newenvironment{code}
+{
+    \VerbatimEnvironment
+    \begin{minted}[frame=lines]{c++}}
+{
+    \end{minted}
+}
+
+% function documentation
+\newenvironment{fdoc}[2][0.23]
+{
+    \centering
+    \vspace{2mm}
+    \begin{tabular}{|p{#1\textwidth}p{0.93\textwidth - #1\textwidth}|}
+        \hline
+        \rowcolor{cyan!30}
+        \multicolumn{2}{|l|}{\texttt{#2}} \\
+        \hline
+}
+{\hline \end{tabular}}
+% description
+\def\descr#1{ \rowcolor{gray!10} \multicolumn{2}{|p{0.93\textwidth+2\tabcolsep}|}{#1} \\ \rowcolor{gray!10} & \\ }
+% param definition
+\def\param#1#2{ \rowcolor{gray!10} \texttt{#1} & #2 \\ }
+
+% refer to a class from the framework
+\def\coderef#1{ \textit{\textcolor{blue}{see #1}} \vspace{3mm}}
+
+%%% DOCUMENT %%%
+\begin{document}
+
+\title{Squirrel Manual}
+\maketitle
+
+\tableofcontents
+
+%%% Core Module %%%
+\chapter{The Core Module}
+\input{core.tex}
+
+%%% Math Module %%%
+\chapter{The Math Module}
+\input{math.tex}
+
+%%% Features Module %%%
+\chapter{The Features Module}
+\input{features.tex}
+
+%%% Neural Network Module %%%
+\chapter{The Neural Network Module}
+
+Documentation will be added soon... please check again in a few days.
+
+
+\end{document}

@@ -1,0 +1,36 @@
+Example code for the decoding of a THUMOS 14 sequence to reproduce our results on the 2016 CVPR paper "Temporal Action Detection using a Statistical Language Model"
+
+################################################################################
+### RUN THE CODE                                                             ###
+################################################################################
+We assume that you already compiled Squirrel and that the src directory and its
+subdirectories containing the binaries are in ../../src/
+
+We further assume that you already trained a classical action recognition model
+and only provide the pre-trained model files in the "model/" directory here.
+Note that Fisher vectors of improved dense trajectories have been used in the paper
+but CNN features may be much more efficient.
+
+1) download the data (validation labels/transcripts and FV of IDT for one THUMOS test video)
+
+    wget -O data.zip https://uni-bonn.sciebo.de/index.php/s/ZOnt9N85cZlTQHO/download
+    unzip data.zip
+    rm data.zip
+
+
+2) decode the test sequence:
+
+    ./decode.sh
+
+   The result of the decoding can be found in the log file "log/decoding.log" at
+   the bottom. The format is
+   <label 1>:<duration (in frames)> <label 2>:<duration (in frames)>. The output
+   of the test sequence should look like this:
+   0:21 10:21 0:21 10:12 0:1 10:24 0:45 10:59 0:35 10:20 0:48
+
+   A mapping from label indices to class names can be found in data/class-mapping.txt
+
+
+Directory "config/":
+    contains the config files used for the different calls to the Squirrel
+    binaries. For further reading on configuration files, see the manual.

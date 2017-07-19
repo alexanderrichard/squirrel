@@ -1,0 +1,195 @@
+2017-05-23.16-54-37 vim realign_hmm_states.py
+2017-05-23.16-54-40 chmod +x realign_hmm_states.py 
+2017-05-23.16-54-48 ./realign_hmm_states.py ../data/split1.test.labels 
+2017-05-23.16-55-52 vim realign_hmm_states.py 
+2017-05-23.16-55-53 ./realign_hmm_states.py ../data/split1.test.labels 
+2017-05-23.16-56-04 vim realign_hmm_states.py 
+2017-05-23.16-56-05 ./realign_hmm_states.py ../data/split1.test.labels 
+2017-05-23.16-56-10 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-56-31 vim realign_hmm_states.py 
+2017-05-23.16-56-33 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-56-44 vim realign_hmm_states.py 
+2017-05-23.16-56-45 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-57-02 vim realign_hmm_states.py 
+2017-05-23.16-57-03 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-57-11 vim realign_hmm_states.py 
+2017-05-23.16-57-12 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-57-31 vim realign_hmm_states.py 
+2017-05-23.16-57-35 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-57-43 vim realign_hmm_states.py 
+2017-05-23.16-57-46 ./realign_hmm_states.py ../data/split1.test.labels blubb
+2017-05-23.16-58-18 vim ../data/split1.test.labels 
+2017-05-23.17-00-24 vim realign_hmm_states.py 
+2017-05-23.17-00-27 vim ../data/split1.test.labels 
+2017-05-23.17-00-35 ./realign_hmm_states.py ../data/split1.test.labels ../data/split1.test.transcripts 
+2017-05-23.17-00-45 vim realign_hmm_states.py 
+2017-05-23.17-00-47 ./realign_hmm_states.py ../data/split1.test.labels ../data/split1.test.transcripts 
+2017-05-23.17-00-55 vim realign_hmm_states.py 
+2017-05-23.17-00-56 ./realign_hmm_states.py ../data/split1.test.labels ../data/split1.test.transcripts 
+2017-05-23.17-01-10 vim ../data/split1.test.transcripts 
+2017-05-24.12-20-12 vim realign_hmm_states.py 
+2017-05-29.13-45-07 ./realign_hmm_states.py 
+2017-05-29.13-45-18 vim realign_hmm_states.py 
+2017-05-29.13-45-20 ./realign_hmm_states.py 
+2017-05-29.13-45-50 ./realign_hmm_states.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-49-57 vim realign_hmm_states.py 
+2017-05-29.13-50-02 mv realign_hmm_states.py linear_alignment.py
+2017-05-29.13-50-10 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-50-46 vim linear_alignment.py 
+2017-05-29.13-51-03 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-51-03 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-51-08 rm bla.txt 
+2017-05-29.13-51-16 vim linear_alignment.py 
+2017-05-29.13-51-19 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-51-27 vim bla.txt 
+2017-05-29.13-51-28 vim bla.txt 
+2017-05-29.13-52-01 vim linear_alignment.py 
+2017-05-29.13-52-03 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-52-20 vim linear_alignment.py 
+2017-05-29.13-52-22 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-52-51 vim bla.txt 
+2017-05-29.13-53-02 vim linear_alignment.py 
+2017-05-29.13-53-04 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-53-41 vim bla.txt 
+2017-05-29.13-53-54 vim ../data/split1.test.labels
+2017-05-29.13-54-21 vim linear_alignment.py 
+2017-05-29.13-54-23 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-54-23 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-17 vim linear_alignment.py 
+2017-05-29.13-55-19 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-19 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-20 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-20 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-20 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-20 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-20 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-21 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-55-26 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt | less
+2017-05-29.13-55-56 vim linear_alignment.py 
+2017-05-29.13-55-59 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-56-25 vimdiff bla.txt ../data/split1.test.labels
+2017-05-29.13-56-39 vim bla.txt 
+2017-05-29.13-57-10 vim linear_alignment.py 
+2017-05-29.13-57-13 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.13-57-36 vimdiff bla.txt ../data/split1.test.labels
+2017-05-29.13-58-02 vim linear_alignment.py 
+2017-05-29.13-58-04 vim linear_alignment.py 
+2017-05-29.13-58-31 vim bla.txt 
+2017-05-29.14-30-47 vim linear_alignment.py 
+2017-05-29.14-30-49 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.14-31-04 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts bla.txt
+2017-05-29.14-31-11 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-31-17 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-32-29 cp /media/work/richard/kuehne/setups_fromScratch/weak-learning/gru-hmm-reestimated-new-features/split1/results-0/hmm_definition.txt .
+2017-05-29.14-32-33 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-32-54 vim hmm_definition.txt 
+2017-05-29.14-32-55 rm hmm_definition.txt 
+2017-05-29.14-33-08 rm hmm_definition.txt 
+2017-05-29.14-33-40 vim hmm_definition.txt
+2017-05-29.14-33-43 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-33-50 vim hmm_definition.txt
+2017-05-29.14-34-07 vim linear_alignment.py 
+2017-05-29.14-34-09 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-34-22 vim linear_alignment.py 
+2017-05-29.14-34-24 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-34-40 vim linear_alignment.py 
+2017-05-29.14-34-41 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-35-17 vim linear_alignment.py 
+2017-05-29.14-35-18 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-35-50 vim linear_alignment.py 
+2017-05-29.14-35-52 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-37-34 vim linear_alignment.py 
+2017-05-29.14-37-35 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-38-51 vim linear_alignment.py 
+2017-05-29.14-38-53 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-39-18 vim linear_alignment.py 
+2017-05-29.14-39-20 ./linear_alignment.py ../data/split1.test.labels ../data/split1.test.transcripts hmm_definition.txt bla.txt
+2017-05-29.14-40-56 vim bla.txt 
+2017-05-29.14-41-02 vim bla.txt 
+2017-05-29.14-41-04 rm bla.txt 
+2017-05-29.14-41-09 vim hmm_definition.txt 
+2017-05-29.15-29-10 vim transition_probabilities.py
+2017-05-29.15-33-34 vim transition_probabilities.py 
+2017-05-29.15-33-36 chmod +x transition_probabilities.py 
+2017-05-29.15-33-53 ./transition_probabilities.py ../results-0/train.labels out.vector
+2017-05-29.15-34-30 vim out.vector 
+2017-05-29.15-35-09 vim out.vector 
+2017-05-29.15-35-26 sort -g out.vector | less
+2017-05-29.15-35-29 rm out.vector 
+2017-05-29.15-57-20 vim prior.py
+2017-05-29.15-57-21 chmod +x prior.py 
+2017-05-29.15-57-28 ./prior.py ../results-0/train.labels out
+2017-05-29.15-57-31 ./prior.py ../results-0/train.labels out
+2017-05-29.15-57-43 vim prior.py 
+2017-05-29.15-57-46 ./prior.py ../results-0/train.labels out
+2017-05-29.15-58-49 vim out 
+2017-05-29.15-58-51 rm out 
+2017-05-29.18-48-29 vim reestimate_hmm.py
+2017-05-29.18-48-32 chmod +x reestimate_hmm.py 
+2017-05-29.18-48-34 ./reestimate_hmm.py 
+2017-05-29.18-48-51 ./reestimate_hmm.py ../log/realign.iter-0.log 48 out.hmm bla
+2017-05-29.18-49-15 vim reestimate_hmm.py 
+2017-05-29.18-49-16 ./reestimate_hmm.py ../log/realign.iter-0.log 48 out.hmm bla
+2017-05-29.18-49-24 ./reestimate_hmm.py ../log/realign.iter-0.log 48 out.hmm bla
+2017-05-29.18-49-42 vim reestimate_hmm.py 
+2017-05-29.18-49-44 ./reestimate_hmm.py ../log/realign.iter-0.log 48 out.hmm bla
+2017-05-29.18-49-53 vim reestimate_hmm.py 
+2017-05-29.18-49-55 ./reestimate_hmm.py ../log/realign.iter-0.log 48 out.hmm bla
+2017-05-29.18-50-18 vim reestimate_hmm.py 
+2017-05-29.18-50-19 ./reestimate_hmm.py ../log/realign.iter-0.log 48 out.hmm bla
+2017-05-29.18-50-50 vim reestimate_hmm.py 
+2017-05-29.18-50-55 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.18-51-28 vim reestimate_hmm.py 
+2017-05-29.18-51-29 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.18-51-45 vim reestimate_hmm.py 
+2017-05-29.18-51-46 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.18-53-34 vim reestimate_hmm.py 
+2017-05-29.18-53-36 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.18-53-43 vim reestimate_hmm.py 
+2017-05-29.18-53-44 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.18-53-49 vim out.hmm 
+2017-05-29.18-54-34 qstat
+2017-05-29.18-54-38 vim out.hmm 
+2017-05-29.19-11-25 vim reestimate_hmm.py 
+2017-05-29.19-11-28 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-12-00 vim reestimate_hmm.py 
+2017-05-29.19-12-01 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-12-22 vim reestimate_hmm.py 
+2017-05-29.19-12-23 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-13-41 vim reestimate_hmm.py 
+2017-05-29.19-13-42 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-14-04 python
+2017-05-29.19-14-46 vim reestimate_hmm.py 
+2017-05-29.19-14-48 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-14-52 vim out.hmm 
+2017-05-29.19-16-54 vim reestimate_hmm.py 
+2017-05-29.19-16-55 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-17-10 vim reestimate_hmm.py 
+2017-05-29.19-17-11 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-17-21 vim reestimate_hmm.py 
+2017-05-29.19-17-22 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-24-18 vim reestimate_hmm.py 
+2017-05-29.19-24-19 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-29-44 vim reestimate_hmm.py 
+2017-05-29.19-29-47 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-30-05 vim bla 
+2017-05-29.19-34-39 vim reestimate_hmm.py 
+2017-05-29.19-34-41 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-35-02 vim reestimate_hmm.py 
+2017-05-29.19-35-03 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-35-13 vim reestimate_hmm.py 
+2017-05-29.19-35-16 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-35-26 vim bla 
+2017-05-29.19-35-37 vim reestimate_hmm.py 
+2017-05-29.19-35-40 ./reestimate_hmm.py ../log/realign.iter-0.log 48 10 out.hmm bla
+2017-05-29.19-36-04 vim bla 
+2017-05-29.19-36-07 rm out.hmm bla 

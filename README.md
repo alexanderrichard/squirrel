@@ -1,20 +1,24 @@
 # Squirrel
 
-Squirrel is a framework for action recognition with a focus on neural networks that runs on Linux. So far, feed forward networks as well as recurrent neural networks are supported. Convolution is to be added soon.
+Squirrel is a framework for action recognition and temporal action detection with a focus on neural networks that runs on Linux. So far, feed forward networks, CNNS, and recurrent neural networks are supported.
 
-The neural network module can be used with any kind of data, as long as the data is in the squirrel input format. The neural-network example shows how to convert ascii data to Squirrel caches.
+Please inspect the examples or see the manual for information on how to use the framework and to determine the correct data format.
 
-A more detailed documentation going beyond what is presented in the examples will be added later.
+The framework also provides an implementation of the methods from the following papers:
 
-The framework also provides an implementation of the methods from the following two papers:
+**(Please cite one of these papers if you use the framework)**
+
+    A. Richard, H. Kuehne, J. Gall:
+    Weakly Supervised Action Learning with RNN based Fine-to-coarse Modeling
+    in IEEE Int. Conf. on Computer Vision and Pattern Recognition, 2017
+
+    A. Richard, J. Gall:
+    A Bag-of-words Equivalent Recurrent Neural Network for Action Recognition,
+    in Computer Vison and Image Understanding, 2017
 
     A. Richard, J. Gall:
     Temporal Action Detection using a Statistical Language Model,
-    in IEEE Int. Conf. on Computer Vision and Patter Recognition, 2016
-
-**(Please cite this paper if you use the framework)**
-
-and
+    in IEEE Int. Conf. on Computer Vision and Pattern Recognition, 2016
 
     A. Richard, J. Gall:
     A BoW-equivalent Recurrent Neural Network for Action Recognition,
@@ -28,17 +32,19 @@ Special thanks go to the Human Language Technology and Pattern Recognition Group
 
 ### Installation
 
-The software uses NVidia Cuda and Intel MKL for parallelization. Modify the  ```definitions.make ``` in  ```src``` to have the correct paths to the MKL and Cuda libraries. If you do not want to use Cuda or OpenMP, comment out these lines:
+The software uses NVidia Cuda and Intel MKL for parallelization. Modify the  ```definitions.make ``` in  ```src``` to have the correct paths to the MKL and Cuda libraries. If you do not want to use Cuda, OpenCV, or OpenMP, comment out these lines:
 
     MODULE_CUDA := 1
     MODULE_OPENMP := 1
+    MODULE_OPENCV := 1
+
+Note that CUDA-8.0 is required for the framework.
 
 and the corresponding lines in ```Modules.hh ```.
 
 If you do not want to use MKL but some other BLAS implementation, you might want to modify the includes in  ```src/Math/Blas.hh ``` and  ```src/Math/Lapack.hh ```. In this case, do not forget to also modify the library paths in  ```definitions.make ```.
 
 To compile the code, go to the  ```src ``` directory and invoke  ```make ```.
-Run the ```copyExecutables.sh``` script to create an  ```executables ``` directory and copy the latest build to this directory. Now, you are ready to run the examples.
 
 ### Contact
 

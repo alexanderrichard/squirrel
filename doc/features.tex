@@ -1,0 +1,444 @@
+\section{Reading Data}
+
+\subsection{Input Format}
+
+The framework supports six different types of feature inputs which are \texttt{vectors}, \texttt{sequences}, \texttt{images}, \texttt{videos}, \texttt{labels}, and \texttt{sequencelabels}.
+Each format has two header lines followed by the actual data. Details are described in the following.
+
+\subsubsection*{Vectors}
+
+Indicated by \texttt{\#vectors} in the first row and followed by \texttt{<num-vectors>} and \texttt{<feature-dimension>} in the second row. For example, a data file with five vectors each of dimension three could look as follows:
+\begin{verbatim}
+#vectors
+5 3
+1.0 1.2 -2.3
+2.3 -1.5 -2.0
+-0.5 0.5 0
+1.0 1.5 1.0
+2.0 2.3 -3.4
+\end{verbatim}
+
+\subsubsection*{Sequences}
+
+Sequence file are similar to vector files but in addition to the total number of vectors and the feature dimension, the number of sequences in the file is also given as third element in the second row. The end of a sequence is indicated by \texttt{\#}. A data file with two sequences containing two and three vectors could look as follows:
+\begin{verbatim}
+#sequences
+5 3 2
+1.0 1.2 -2.3
+2.3 -1.5 -2.0
+#
+-0.5 0.5 0
+1.0 1.5 1.0
+2.0 2.3 -3.4
+#
+\end{verbatim}
+\texttt{5 3 2} indicates that there are in total $ 5 $ vectors, each of dimension $ 3 $, and there are $ 2 $ sequences.
+
+\subsubsection*{Images}
+
+Images follow a similar structure. The first header row states \texttt{\#images} followed by a second row specifying the image width and height as well as the number of channels (one or three). The data is the absolute path to the image. If images do not match the specified width and height, they are resized while reading. An image file could look as follows:
+\begin{verbatim}
+#images
+400 300 3
+/path/to/img1.jpg
+/path/to/img2.jpg
+/path/to/img3.jpg
+/path/to/img4.jpg
+\end{verbatim}
+While reading, the images would be resized to $ 400 $ pixels in width and $ 300 $ pixels in height and they would be treated as RGB images ($ 3 $ channels).
+
+\subsubsection*{Videos}
+
+Videos look like image files. Actually, a video in our framework is defined as a sequence of frames. Thus, it is basically an image file apart from the first row of the header. Similar to sequence files, the end of a video is indicated with \texttt{\#}. A video file containing two videos could look as follows:
+\begin{verbatim}
+#videos
+400 300 3
+/path/to/video1/frame1.jpg
+/path/to/video1/frame2.jpg
+/path/to/video1/frame3.jpg
+#
+/path/to/video2/frame1.jpg
+/path/to/video2/frame2.jpg
+/path/to/video2/frame3.jpg
+/path/to/video2/frame4.jpg
+/path/to/video2/frame5.jpg
+#
+\end{verbatim}
+
+\subsubsection*{Labels}
+
+Particularly for classification tasks, it is convenient to provide a class label for each vector or sequence of an input file. Therefore, label files are also provided. The vector equivalent \texttt{\#labels} requires the second row of the header to give the total number of labels and the number of classes as \texttt{<total-number-of-labels> <number-of-classes>}. Consider, for instance, a problem with three classes and five observations. We can define the labels as follows:
+\begin{verbatim}
+#labels
+5 3
+0
+2
+1
+0
+2
+\end{verbatim}
+\texttt{5 3} indicates that there are $ 5 $ observations and $ 3 $ classes. Class labels always start at zero, so the possible labels for $ 3 $ classes are $ 0, \dots, 2 $.
+
+\subsubsection*{Sequencelabels}
+
+As sometimes a label for each frame of a video or a sequence is required, in addition to regular labels, sequencelabels can be defined. Similar to sequence files, the second row of the header is extended by the number of sequences and sequences are again separated by \texttt{\#}. A sequence label file with two sequences containing two and three labels from a set of three classes could look as follows:
+\begin{verbatim}
+#sequencelabels
+5 3 2
+0
+2
+#
+1
+0
+2
+#
+\end{verbatim}
+
+
+\subsection{Features::FeatureReader}
+
+\coderef{Features/FeatureReader.hh}
+
+In order to read features in the framework, the \texttt{FeatureReader} and \texttt{AlignedFeatureReader} classes from the \texttt{Features} module can be used. While the first reads a features or label file alone, the second reads a source and a target file that need to match in their number of observations or sequences. Find function definitions and examples for different cases below.
+
+\subsubsection{FeatureReader}
+
+The \texttt{FeatureReader} class provides functions to read input files of type \texttt{\#vectors} and \texttt{\#images}. Files of the format \texttt{\#sequences} and \texttt{\#videos} are intepreted as \texttt{\#vectors} and \texttt{\#images}, respecively.
+
+\subsubsection*{Parameters}
+
+\begin{itemize}
+    \item \texttt{features.feature-reader.feature-cache} (string) the input file
+    \item \texttt{features.feature-reader.buffer-size} (u32) number of vectors/sequences to load into main memory at a time
+    \item \texttt{features.feature-reader.shuffle-buffer} (bool) randomly shuffle the order of vectors/sequences
+    \item \texttt{features.feature-reader.preprocessors} (list of strings) list of preprocessors to apply to the data, see below
+\end{itemize}
+
+\subsubsection*{Most Important Functions}
+
+\begin{fdoc}{FeatureReader(const char* name = "features.feature-reader")}
+    \descr{constructor}
+    \param{name}{the name to address the feature reader in the configuration. Default is \texttt{features.feature-reader}}
+\end{fdoc}
+
+\begin{fdoc}{void Features::FeatureReader::initialize()}
+    \descr{initializes the FeatureReader. Needs to be called before using any other function.}
+\end{fdoc}
+
+\begin{fdoc}{u32 Features::FeatureReader::totalNumberOfFeatures() const}
+    \descr{returns the number of feature vectors in the input file}
+\end{fdoc}
+
+\begin{fdoc}{u32 Features::FeatureReader::featureDimension() const}
+    \descr{returns the dimension of the feature vectors or the number of classes for label files}
+\end{fdoc}
+
+\begin{fdoc}{u32 Features::FeatureReader::newEpoch()}
+    \descr{starts a new epoch, \ie resets the feature reader to its state after \texttt{initialized} as been called}
+\end{fdoc}
+
+\begin{fdoc}{bool Features::FeatureReader::hasFeatures()}
+    \descr{returns true if there are unprocessed feature vectors}
+\end{fdoc}
+
+\begin{fdoc}{const Math::Vector<Float>\& next()}
+    \descr{returns a Math::Vector of floats containing the next-to-read feature vector}
+\end{fdoc}
+
+\subsubsection*{Configuration Example}
+
+\begin{config}
+[features.feature-reader]
+feature-cache=<my-input-file.txt>   # input file
+shuffle-buffer=true                 # shuffle the buffer
+buffer-size=10                      # load at most 10 vectors/sequences
+\end{config}
+
+\subsubsection*{Code Example}
+\begin{code}
+#include <Features/FeatureReader.hh>
+
+Features::FeatureReader reader;
+reader.initialize();
+// run twice over the data
+for (u32 epoch = 0; epoch < 2; epoch++) {
+    // read all feature vectors
+    while (reader.hasFeatures()) {
+        const Math::Vector<Float>& f = reader.next();
+        // ... do something with f ...
+    }
+    reader.newEpoch();
+}
+\end{code}
+
+\subsubsection{SequenceFeatureReader}
+
+Mostly same function as the \texttt{FeatureReader} but this time, sequences are read instead of single vectors. The main differences to the \texttt{FeatureReader} are described below.
+
+\subsubsection*{Most Important Functions}
+
+\begin{fdoc}{u32 totalNumberOfSequences() const}
+    \descr{returns the number of sequences in the input file}
+\end{fdoc}
+
+\begin{fdoc}{bool hasSequences() const}
+    \descr{similar to \texttt{hasFeatures()} but this time returns if there are unread sequences}
+\end{fdoc}
+
+\begin{fdoc}{const Math::Matrix<Float>\& next()}
+    \descr{returns the next sequence as a Matrix of floats where each column is one vector of the sequence (\ie the matrix has size \texttt{featureDim} $ \times $ \texttt{sequenceLength})}
+\end{fdoc}
+
+\subsubsection*{Code Example}
+\begin{code}
+#include <Features/FeatureReader.hh>
+
+Features::SequenceFeatureReader reader;
+reader.initialize();
+// read all feature sequences
+while (reader.hasSequences()) {
+    const Math::Matrix<Float>& matrix = reader.next();
+    // ... do something with matrix ...
+}
+\end{code}
+
+\subsubsection{LabelReader}
+
+Same as the \texttt{FeatureReader} but reads \texttt{\#labels} files. Get next label via
+
+\begin{fdoc}{u32 nextLabel()}
+    \descr{returns the next label in the input file}
+\end{fdoc}
+
+\subsubsection{SequenceLabelReader}
+
+Same as the \texttt{SequenceFeatureReader} but reads \texttt{\#sequencelabels} files. Get next sequence of labels via
+
+\begin{fdoc}{const std::vector<u32>\& nextLabelSequence()}
+    \descr{return an std::vector containing a label for each frame of the sequence}
+\end{fdoc}
+
+
+\subsection{Features::AlignedFeatureReader}
+
+\coderef{Features/AlignedFeatureReader.hh}
+
+The \texttt{AlignedFeatureReader} aligns two feature files to each other. For classification and regression tasks, there is usually an input file providing the features and a target file providing the labels (for classification) or target features (for regression) that are used as ground truth. This class makes sure that both can be aligned to each other, \ie they have the same amount of feature vectors and/or sequences. Particularly, it ensures that the correct targets are returned even if the source (the input) is shuffled.
+
+\subsubsection*{Parameters}
+\begin{itemize}
+    \item \texttt{features.aligned-feature-reader.feature-cache} the source/input feature file
+    \item \texttt{features.aligned-feature-reader.target-cache} the target feature/label file
+\end{itemize}
+
+Most methods are inherited from the \texttt{FeatureReader} and \texttt{SequenceFeatureReader}, respectively. In order to get to corresponding labels/targets, few additional methods are available.
+
+\subsubsection*{AlignedFeatureReader}
+
+Used to align \texttt{\#vectors} files with other \texttt{\#vectors} files.
+
+\begin{fdoc}{u32 targetDimension() const}
+    \descr{feature dimension of the target vectors}
+\end{fdoc}
+
+\begin{fdoc}{const Math::Vector<Float>\& target() const}
+    \descr{return the target vector}
+\end{fdoc}
+
+\subsubsection*{Code Example}
+\begin{code}
+#include <Features/AlignedFeatureReader.hh>
+
+Features::AlignedFeatureReader reader;
+reader.initialize();
+// read all feature vectors
+while (reader.hasFeatures()) {
+    const Math::Matrix<Float>& source = reader.next();
+    const Math::Matrix<Flaot>& target = reader.target();
+    std::cout << "source: " << source.toString() << std::endl;
+    std::cout << "target: " << target.toString() << std::endl;
+}
+\end{code}
+
+\subsubsection*{LabeledFeatureReader}
+
+Used to align \texttt{\#vectors} files to \texttt{\#labels} files.
+
+\begin{fdoc}{u32 label() const}
+    \descr{return the label for the last feature vector obtained with \texttt{next()}}
+\end{fdoc}
+
+\begin{fdoc}{u32 nClasses() const}
+    \descr{returns the number of target classes}
+\end{fdoc}
+
+\subsubsection*{Code Example}
+\begin{code}
+#include <Features/AlignedFeatureReader.hh>
+
+Features::LabeledFeatureReader reader;
+reader.initialize();
+// read all feature vectors
+while (reader.hasFeatures()) {
+    const Math::Matrix<Float>& source = reader.next();
+    u32 label = reader.label();
+    std::cout << "source: " << source.toString() << std::endl;
+    std::cout << "label: " << label << std::endl;
+}
+\end{code}
+
+
+\subsubsection*{AlignedSequenceFeatureReader}
+
+Used to align \texttt{\#sequences} files to \texttt{\#vectors} files. The number of sequences in the source file and the number of vectors in the target file must be the same.
+Methods to get the source features are inherited from \texttt{SequenceFeatureReader}, target features can be accessed similar to the \texttt{AlignedFeatureReader}.
+
+\subsubsection*{LabeledSequenceFeatureReader}
+
+Used to align \texttt{\#sequences} files to \texttt{\#labels} files. The number of sequences in the source file and the number of labels in the target file must be the same.
+Methods to get the source features are inherited from \texttt{SequenceFeatureReader}, target labels can be accessed similar to the \texttt{LabeledFeatureReader}.
+
+\subsubsection*{TemporallyAlignedSequenceFeatureReader}
+
+Used to align \texttt{\#sequences} files to other \texttt{\#sequences} files. The number of sequences in the source file and the number of sequences in the target file must be the same as well as the number of feature vectors for each source/target sequence pair.
+Methods to get the source features are inherited from \texttt{SequenceFeatureReader}, target sequences can be accessed with this method:
+
+\begin{fdoc}{const Math::Matrix<Float>\& target() const}
+    \descr{return the target sequence aligned to the latest (via \texttt{next()}) obained source sequence as a matrix of size \texttt{targetDimension} $ \times $ \texttt{numberOfFrames}}
+\end{fdoc}
+
+\subsubsection*{Code Example}
+\begin{code}
+#include <Features/AlignedFeatureReader.hh>
+using namespace std;
+
+Features::TemporallyAlignedFeatureReader reader;
+reader.initialize();
+// read all feature sequences
+while (reader.hasSequences()) {
+    const Math::Matrix<Float>& source = reader.next();
+    const Math::Matrix<Float>& target = reader.target();
+    cout << source.nColumns() << " = " << target.nColumns() << endl;
+    cout << source.nRows() << " = " << reader.featureDimension() << endl;
+    cout << target.nRows() << " = " << reader.targetDimension() << endl;
+}
+\end{code}
+
+
+\subsubsection*{TemporallyLabeledSequenceFeatureReader}
+
+Used to align \texttt{\#sequences} files to \texttt{\#labelsequences} files. The number of sequences in the source file and the number of label sequences in the target file must be the same as well as the number of feature vectors/labels for each source/target sequence pair.
+Methods to get the source features are inherited from \texttt{SequenceFeatureReader}, target label sequences can be accessed with this method:
+
+\begin{fdoc}{const std::vector<u32>\& labelSequence() const}
+    \descr{return the target label sequence aligned to the latest (via \texttt{next()}) obained source sequence as a std::vector with \texttt{numberOfFrames} label entries}
+\end{fdoc}
+
+\subsubsection*{Code Example}
+\begin{code}
+#include <Features/AlignedFeatureReader.hh>
+
+Features::TemporallyLabeledFeatureReader reader;
+reader.initialize();
+// read all feature sequences
+while (reader.hasSequences()) {
+    const Math::Matrix<Float>& source = reader.next();
+    const std::vector<u32>& labels = reader.labelSequence();
+    std::cout << "source: " << source.toString() << std::endl;
+    for (u32 t = 0; t < labels.size(); t++)
+        std::cout << labels.at(t) << std::endl;
+}
+\end{code}
+
+
+\subsection{Features::Preprocessor}
+
+\coderef{Features/Preprocessor.hh}
+
+Input data can be preprocessed directly when being read. Therefore, a variety of feature preprocessors is available. To illustrate how to use those preprocessors, we start with a simple example of subtracting a vector (\eg the mean) from all feature vectors and afterwards multiplying the result by a matrix (\eg for a PCA).
+
+\subsubsection*{Configuration Example}
+
+\begin{config}
+[features.feature-reader]
+feature-cache = input.txt
+preprocessors = my-preprocessor1, my-preprocessor2
+
+[my-preprocessor1]
+type          = vector-subtraction
+vector        = mean.vector
+
+[my-preprocessor2]
+type          = matrix-multiplication
+matrix        = pca.matrix
+\end{config}
+
+Note that \texttt{preprocessors} can be a comma separated list of arbitrary names that are subsequently defined with the \texttt{type} parameter of the \texttt{Features::Preprocessor} class. In  the following, the most important preprocessors available in Squirrel are specified.
+
+\subsubsection*{Vector Subtraction Preprocessor}
+Subtracts a given vector from each feature vector.\\
+\texttt{<name>.type = vector-subtraction}
+\begin{itemize}
+    \item \texttt{<name>.vector} (string) filename of the vector to subtract
+\end{itemize}
+
+\subsubsection*{Vector Division Preprocessor}
+Divides each feature vector elementwise by a given vector of the same size.\\
+\texttt{<name>.type = vector-division}
+\begin{itemize}
+    \item \texttt{<name>.vector} (string) filename of the vector to divide by (elementwise division)
+\end{itemize}
+
+\subsubsection*{Matrix Multiplication Preprocessor}
+Multiplies each feature vector with a given matrix.\\
+\texttt{<name>.type = matrix-multiplication}
+\begin{itemize}
+    \item \texttt{<name>.matrix} (string) filename of the matrix to multiply each feature vector with
+    \item \texttt{<name>.transpose} (bool) flag if matrix should be transposed
+\end{itemize}
+
+\subsubsection*{Windowing Preprocessor}
+Applies a temporal windowing of each feature vector with the neighboring vectors. If the current feature vector is at time $ t $, this preprocessor concatenates all feature vectors in the range $ t - $\texttt{window-size}$ / 2 $ to $ t + $ \texttt{window-size}$ / 2 $. Requires the input features to be of type \texttt{\#sequences} of \texttt{\#videos}.\\
+\texttt{<name>.type = windowing}
+\begin{itemize}
+    \item \texttt{<name>.window-size} (u32) size of the temporal window
+\end{itemize}
+
+\subsubsection*{Z-Score Preprocessor}
+Applies mean and variance normalization on each feature vector. Mean and variance are computed on sequence level. Thus, input feature file is required to be of type \texttt{\#sequence} of \texttt{\#videos}.\\
+\texttt{<name>.type = z-score}
+
+\subsubsection*{L2-Normalization Preprocessor}
+Normalizes each feature vector by its $ \ell_2 $ norma.\\
+\texttt{<name>.type = l2-normalization}
+
+\subsubsection*{Power-Normalization Preprocessor}
+Applies power normalization to each feature vector.\\
+\texttt{<name>.type = power-normalization}
+\begin{itemize}
+    \item \texttt{<name>.power} (Float) the exponent used for power normalization. Default is $ 0.5 $.
+\end{itemize}
+
+\subsubsection*{Random-Image-Cropping Preprocessor}
+Generates random crop out of an input image.Input feature file should be of type \texttt{\#images} or \texttt{\#videos}.\\
+\texttt{<name>.type = random-image-cropping}
+\begin{itemize}
+    \item \texttt{<name>.input-width} (u32) width of the input image
+    \item \texttt{<name>.input-height} (u32) heigth of the input image
+    \item \texttt{<name>.channels} (u32) number of channels of the input image
+    \item \texttt{<name>.possible-side-lengths} (list of u32) two lengths from this list are randomly chosen to determine the crop size in $ x $ and $ y $ direction
+    \item \texttt{<name>.crop-width} (u32) width to resize the randomly cropped image to
+    \item \texttt{<name>.crop-height} (u32) height to resize the randomly cropped image to
+\end{itemize}
+
+\subsubsection{Implementing Your Own Preprocessor}
+
+In order to implement your own preprocessor, inherit from the \texttt{Features::Preprocessor} class. Add the name of your preprocessor to the \texttt{enum Type} in \texttt{Features/Preprocessor.hh} and also to \texttt{Features::Preprocessor::paramType\_} in \texttt{Features::Preprocessor.cc}. Note that the order of preprocessors in the \texttt{enum} and \texttt{paramType\_} has to be the same. Then, add your preprocessor to the factory method \texttt{Features::Preprocessor::createPreprocessor} in the same \texttt{.cc} file.
+
+When writing your own preprocessor class, make sure to override the following functions from the base class:
+\begin{itemize}
+    \item \texttt{virtual void initialize(u32 inputDimension)} the initialize function to set up the preprocessor
+    \item \texttt{virtual bool needsContext()} a method returning if the preprocessor operates on single feature vectors (like \texttt{vector-subtraction}) or on sequences (like \texttt{windowing})
+    \item \texttt{virtual void work(const Math::Matrix<Float>\& in, Math::Matrix<Float>\& out)} the actual implementation of the preprocessor
+\end{itemize}
+Note that the \texttt{work} method receives a \texttt{Math::Matrix} as input. In case of feature vectors (\texttt{\#vectors} or \texttt{\#images}), the matrix will be of size \texttt{input-dimension} $ \times \ 1 $, in case of sequences, it will be of size \texttt{input-dimension} $ \times $ \texttt{sequence-length}. The output sequence length has to be the same as the input sequence length, \ie \texttt{out.nColumns()} must be equal to \texttt{in.nColumns()}. The feature dimension may vary, \ie \texttt{out.nRows()} can be different from \texttt{in.nRows()} (which is the case \eg for the \texttt{windowing} preprocessor). Make sure to set the variable \texttt{outputDimension\_} to the correct value in the \texttt{initialize} method.
