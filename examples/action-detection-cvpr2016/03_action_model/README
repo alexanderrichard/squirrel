@@ -1,3 +1,0 @@
-We trained the action model as a log-linear model, i.e. a neural network without hidden layers, on the (normalized) Fisher vectors of improved dense trajectories.
-On Thumos, the validation set was segmented into single action clips and the 20 actions from UCF101 have also been used for training.
-For instructions on how to train a neural network with Squirrel, see the neural network example.
