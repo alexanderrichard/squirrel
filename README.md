@@ -32,13 +32,11 @@ Special thanks go to the Human Language Technology and Pattern Recognition Group
 
 ### Installation
 
-The software uses NVidia Cuda and Intel MKL for parallelization. Modify the  ```definitions.make ``` in  ```src``` to have the correct paths to the MKL and Cuda libraries. If you do not want to use Cuda, OpenCV, or OpenMP, comment out these lines:
+The software uses NVidia Cuda (at least Cuda-8.0 required), OpenCV for reading images (OpenCV-2.x), and Intel MKL for parallelization. Modify the  ```definitions.make ``` in  ```src``` to have the correct paths to the MKL and Cuda libraries. If you do not want to use Cuda, OpenCV, or OpenMP, comment out these lines:
 
     MODULE_CUDA := 1
     MODULE_OPENMP := 1
     MODULE_OPENCV := 1
-
-Note that CUDA-8.0 is required for the framework.
 
 and the corresponding lines in ```Modules.hh ```.
 
