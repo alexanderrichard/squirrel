@@ -1,0 +1,202 @@
+\section{Configuring a Neural Network}
+
+\coderef{Nn/NeuralNetwork.hh}
+
+Squirrel supports a variety of different neural network architectures, including CNNs and recurrent neural networks. In the following, details on configuring neural networks in Squirrel are provided.
+
+In order to set up a neural network, first its architecture needs to be defined. Therefore, two major components need to be specified: Connections and layers. Connections are initially just a list of names that are later filled with meaning. So, configuring a network with two layers requires to define the connections between the layers first:
+
+
+\begin{verbatim}
+    [neural-network]
+    connections = connection-0-1, connection-1-2
+
+    [neural-network.connection-0-1]
+    from = network-input
+    to   = layer-1
+    type = weight-connection
+
+    [neural-network.connection-1-2]
+    from = layer-1
+    to   = layer-2
+    type = weight-connection
+\end{verbatim}
+
+For each of the specified connections, the source and destination layer are specified, also by arbitrary names, here \texttt{layer-1} and \texttt{layer-2}. The first connection usually has the \texttt{network-input} as source and forwards it to the first layer. There are different types of connections (see below). The \texttt{weight-connection} simply multiplies a weight matrix to the input. The layer types still need to be added to the configuration:
+
+\begin{verbatim}
+    [neural-network.layer-1]
+    type = rectified
+    number-of-units = 128
+
+    [neural-network.layer-2]
+    type = softmax
+    number-of-units = 10
+\end{verbatim}
+
+A list of possible layers and their description can be found below. Be aware of the \texttt{connections} list as this specifies the topology of the network. Particularly when building network with recurrent skip connections, the order of the list is important. Examples of these special cases are given below. //TODO
+
+
+\subsection{Layer Types}
+
+\subsubsection*{Layer Base Class}
+\coderef{Nn/Layer.hh}
+
+All layers inherit from a base layer class. Parameters accessible for all layers are:
+\begin{itemize}
+    \item \texttt{number-of-units} the number of units. Default is $ 0 $, mandatory to be specified unless the connection leading to the layer is a convolutional connection.
+    \item \texttt{dropout-probability} amount of units that are randomly set to zero for dropout (default: 0.0).
+    \item \texttt{use-bias} add a bias for this layer if true, else omit bias (default: true).
+    \item \texttt{is-bias-trainable} bias is trained if true or left unchanged if false (default: true).
+    \item \texttt{bias-initialization} Initialization if bias can not be loaded from file. Possible options: \texttt{random, zero} (default: \texttt{random}).
+    \item \texttt{random-bias-min} and \texttt{random-bias-max} min and max value for the random (uniform) initialization (default: $ -0.1 $ and $ 0.1 $).
+    \item \texttt{learning-rate-factor} train this layer stronger (factor $ > 1 $) or weaker (factor $ < 1 $) than other layers (default: 1.0).
+\end{itemize}
+
+\subsubsection*{Identity Layer}
+
+Does not change the layer units at all (apart from adding a bias if \texttt{use-bias} is true, which is done by all layers).
+
+\subsubsection*{Sigmoid Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Applies the sigmoid function $ \sigma(x) = \frac{1}{1+\exp(-x)} $ to each input unit. Use by setting \texttt{type = sigmoid}.
+
+\subsubsection*{Tanh Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Applies the $ \mathrm{tanh} $ to each input unit. Use by setting \texttt{type = tanh}.
+
+\subsubsection*{Rectified Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Applies the rectifier $ \mathrm{relu}(x) = \max(0, x) $ to each input unit. Use by setting \texttt{type = rectified}.
+
+\subsubsection*{Average-Pooling and Max-Pooling Layer}
+\coderef{Nn/MultiPortLayer.hh}
+
+Applies average-pooling/max-pooling the the input units. Usually used for CNNs. Use by setting \texttt{type = avg-pooling} or \texttt{type = max-pooling}. Parameters are
+\begin{itemize}
+    \item \texttt{grid-size} the region to apply pooling to, \eg 3 for a $ 3 \times 3 $ grid. Default: 2.
+    \item \texttt{stride} spatial stride of the pooling region. Default: 2.
+\end{itemize}
+
+\subsubsection*{Batch-Normalization Layer}
+\coderef{Nn/MultiPortLayer.hh}
+
+Applies batch normalization to the input units. Use by setting \texttt{type = batch-normalization}. Parameters are
+\begin{itemize}
+    \item \texttt{is-spatial} apply batch normalization spatially if true, else apply batch normalization to each input unit. Default: true.
+    \item \texttt{is-inference} use inference mode of batch-normalization (load mean and variance from file) if true, else use training mode (estimate running mean and variance)
+\end{itemize}
+
+\subsubsection*{Gated Recurrent Unit Layer}
+\coderef{Nn/MultiPortLayer.hh}
+
+Implementation of gated recurrent units. Use by setting \texttt{type = gated-recurrent-unit}. Note that this layer is inherently recurrent and does not need the specification of any recurrent connection (\ie a connection with same source and target layer).
+
+\subsubsection*{Softmax Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Applies the $ \mathrm{softmax} $ function to the input units. Although usually used as output layer, it can also be used as an internal layer in Squirrel. Use by setting \texttt{type = softmax}.
+
+\subsubsection*{Clipped Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+A generalization of the rectified layer. Clips each input unit at a lower and upper bound. Use by setting \texttt{type = clipped}. Parameters are
+\begin{itemize}
+    \item \texttt{left-threshold} lower bound for clipping (default: 0.0)
+    \item \texttt{right-threshold} upper bound for clipping (default: 1.0)
+\end{itemize}
+If the lower bound is zero and the upper bound is infinity, the layer is a rectifier.
+
+\subsubsection*{L2-Normalization Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Applies $ \ell_2 $-normalization to the input, \ie divides each input unit by the $ \ell_2 $ norm of all input units. Use by setting \texttt{type = l2-normalization}.
+
+\subsubsection*{Power-Normalization Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Applies power-normalization to each input unit, \ie applies the function $ \mathrm{power}(x) = \mathrm{sign}(x) \cdot x^p $. Use by setting \texttt{type = power-normalization}.
+Set the value $ p $ using the parameter \texttt{power} (default: 0.5).
+
+\subsubsection*{Sequence length normalization layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Only useful for recurrent networks. Divides the input units at the last timeframe of the sequence by the sequence length. Use by setting \texttt{type = sequence-length-normalization}.
+
+\subsubsection*{Temporal Reversion Layer}
+\coderef{Nn/ActivationLayer.hh}
+
+Only useful for recurrent networks. Reverts the temporal order of the input units. Can be used to define bi-directional recurrent networks. Use by setting \texttt{type = temporal-reversion}.
+
+
+\subsection{Connection Types}
+
+\subsubsection*{Connection Base Class}
+
+All connections inherit from a base connection class. Parameters accessible for all connections are
+\begin{itemize}
+    \item \texttt{learning-rate-factor} train this connection stronger (factor $ > 1 $) or weaker (factor $ < 1 $) than other connections (default: 1.0).
+    \item \texttt{is-recurrent} force the connection to be treated as recurrent even if it is configured as a standard forward from \texttt{layer-from} to \texttt{layer-to}. If true, the input to \texttt{layer-to} at time $ t $ is a linear transformation (matrix multiplicaiton or convolution) of the output of \texttt{layer-from} at time $ t - 1 $. If false, the input to \texttt{layer-to} at time $ t $ is a linear transformation (matrix multiplication or convolution) of the output of \texttt{layer-from} at time $ t $ (default: false).
+\end{itemize}
+
+\subsubsection*{Weight Connection}
+
+Causes the input of \texttt{layer-to} to be the output of \texttt{layer-from} multiplied by the connections weight matrix. Use by setting \texttt{type = weight-connection}. This type of connection is also used if no \texttt{type} value has been set. Parameters are
+\begin{itemize}
+    \item \texttt{is-trainable} train the weights of this connection if true, else leave them unchanged during training (default: true)
+    \item \texttt{weight-initialization} if the weights can not be loaded from a file, initialize them by one of these: \texttt{random, zero, identity, glorot}. \texttt{random} is a unifrom random initialization, \texttt{zero} initializes with zeros, \texttt{identity} initializes with the identity matrix (if matrix is not square, all remaining columns/rows are initialized with zeros), and \texttt{glorot} initializes based on a strategy proposed by Glorot et.\ al.\ (default: \texttt{random})
+    \item \texttt{random-weight-min} and \texttt{random-weight-max} the interval to uniformly sample values from in case of \texttt{random} initialization (default: $ -0.1 $ and $ 0.1 $).
+\end{itemize}
+
+\subsubsection*{Convolutional Connection}
+
+Causes the input of \texttt{layer-to} to be a convolution of the output of \texttt{layer-from} with the kernels of this connections. Use by setting \texttt{type = convolutional-connection}. Parameters are the same as for the weight connections plus
+\begin{itemize}
+    \item \texttt{kernel-height} and \texttt{kernel-width} the height and width of the kernels (default: $ 3 $ for both)
+    \item \texttt{dest-channels} the number of destination channels/feature maps (mandatory to be set)
+    \item \texttt{stride-x} and \texttt{stride-y} the stride in $ x $- and $ y $-direction (default: $ 1 $ for both)
+\end{itemize}
+
+\subsubsection*{Plain Connection}
+
+Does not apply any linear transformation, \ie input of \texttt{layer-to} is equal to output of \texttt{layer-from}. Requires \texttt{layer-from} and \texttt{layer-to} to have the same number of units.
+
+
+\section{Training Neural Network}
+\coderef{examples/mnist/config/training.config}
+
+\subsection{General Settings}
+
+Neural network training requires some general settings. These are:
+\begin{itemize}
+    \item \texttt{source-type} and \texttt{target-type}, \ie if they are single vectors/images/labels or sequences of vectors/images/labels. Use \texttt{single} for the first, \texttt{sequence} for the latter (default: \texttt{single}).
+    \item \texttt{batch-size} the batch size to use (default: 1).
+    \item \texttt{trainer} the kind of trainer to use (\texttt{feed-forward-trainer, rnn-trainer}).
+    \item \texttt{training-criterion} the criterion to use for training, \eg \texttt{cross-entropy, squared-error}, see \textit{Nn/TrainingCriteria.hh} for more options.
+\end{itemize}
+
+\subsection{Loading Data}
+
+In order to provide data for the network, the \textit{Features} module is used. Provide the input and target data by specifying an \texttt{aligend-feature-reader}:
+\begin{verbatim}
+    [features.aligned-feature-reader]
+    feature-cache = <input feature file>
+    target-cache  = <target label/feature file>
+\end{verbatim}
+For details \eg on how to shuffle data, see Chapter~\ref{ch:features}. If you only want to forward data without using a target-cache, use the \texttt{feature-reader} instead of the \texttt{aligned-feature-reader}. As the network needs some information on the feature dimension, also specify the following parameters:
+\begin{verbatim}
+    [neural-network]
+    input-dimension = <input-feature-dimension>
+    source-width    = <width of input images/videos>
+    source-height   = <height of input images/videos>
+    source-channels = <number of input channels (e.g. 3 for rgb, 1 for gray)>
+\end{verbatim}
+
+Note that the last three parameters are only required if the input is images or videos.
+
+\section{Further Configuration}
+
+We refer to the \texttt{config} files in the \texttt{examples} directory for more example configuration of both, CNNs and recurrent neural networks.

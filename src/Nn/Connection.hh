@@ -41,7 +41,6 @@ private:
 	static const Core::ParameterFloat paramWeightScale_;
 	static const Core::ParameterFloat paramLearningRateFactor_;
 	static const Core::ParameterBool paramIsRecurrent_;
-	static const Core::ParameterFloat paramKeepRatio_;
 
 public:
 	enum ConnectionType { plainConnection, weightConnection, convolutionalConnection, validConvolutionalConnection };
@@ -54,7 +53,6 @@ protected:
 	u32 destPort_;
 	bool isRecurrent_;			// a connection is recurrent if the source layer index is greater or equal to the target layer index
 	bool isComputing_;
-	Float keepRatio_;
 	ConnectionType connectionType_;
 	std::string weightsFileSuffix_;
 

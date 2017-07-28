@@ -40,8 +40,6 @@ const Core::ParameterFloat Connection::paramLearningRateFactor_("learning-rate-f
 
 const Core::ParameterBool Connection::paramIsRecurrent_("is-recurrent", false, "neural-network.connection");
 
-const Core::ParameterFloat Connection::paramKeepRatio_("keep-ratio", 1.0, "neural-network.connection");
-
 Connection::Connection(const char* name, BaseLayer* source, BaseLayer* dest, u32 sourcePort, u32 destPort, bool isRecurrent, ConnectionType type) :
 		name_(name),
 		prefix_(std::string("neural-network.").append(name)),
@@ -51,7 +49,6 @@ Connection::Connection(const char* name, BaseLayer* source, BaseLayer* dest, u32
 		destPort_(destPort),
 		isRecurrent_(isRecurrent || Core::Configuration::config(paramIsRecurrent_, prefix_)),
 		isComputing_(false),
-		keepRatio_(Core::Configuration::config(paramKeepRatio_, prefix_)),
 		connectionType_(type),
 		learningRateFactor_(Core::Configuration::config(paramLearningRateFactor_, prefix_))
 {}
@@ -67,7 +64,7 @@ std::string Connection::getParamFileName(const std::string& basePath, const std:
 }
 
 bool Connection::isRecurrent() const {
-	return (isRecurrent_ || (keepRatio_ < 1.0));
+	return isRecurrent_;
 }
 
 BaseLayer& Connection::from() {
@@ -92,19 +89,12 @@ void Connection::forwardWeightMultiplication() {
 	require(dest_);
 	u32 t = dest_->nTimeframes() - 1; // the latest time frame index
 
-	// TODO keepRatio is experimental...
-	bool usePrevious = isRecurrent_;
-	Float r = Math::Random::random();
-	if (r > keepRatio_)
-		usePrevious = true;
-
 	// note: dest_->activations(t) is not implicitly reset
-	//if (isRecurrent() && (dest_->nTimeframes() > 1)) {
-	if (usePrevious && (dest_->nTimeframes() > 1)) {
+	if (isRecurrent() && (dest_->nTimeframes() > 1)) {
 		require_gt(source_->nTimeframes(), t-1);
 		_forwardWeightMultiplication(source_->activationsOut(t-1, sourcePort_), dest_->activationsIn(t, destPort_));
 	}
-	else if (!usePrevious) {
+	else {
 		require_gt(source_->nTimeframes(), t);
 		_forwardWeightMultiplication(source_->activationsOut(t, sourcePort_), dest_->activationsIn(t, destPort_));
 	}
