@@ -94,7 +94,7 @@ void Connection::forwardWeightMultiplication() {
 		require_gt(source_->nTimeframes(), t-1);
 		_forwardWeightMultiplication(source_->activationsOut(t-1, sourcePort_), dest_->activationsIn(t, destPort_));
 	}
-	else {
+	else if (!isRecurrent()) {
 		require_gt(source_->nTimeframes(), t);
 		_forwardWeightMultiplication(source_->activationsOut(t, sourcePort_), dest_->activationsIn(t, destPort_));
 	}
