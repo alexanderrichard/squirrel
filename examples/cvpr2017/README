@@ -16,6 +16,10 @@ subdirectories containing the binaries are in ../../src/
 2) train the model:
 
     ./train.sh
+   
+   OR download our trained model for Breakfast here:
+   https://uni-bonn.sciebo.de/index.php/s/lFTlv5obv8JZkc5/download
+   and replace results/iter-X in config/decode.config and in decode.sh with the path to the downloaded model
 
 
 3) decode the test sequences:
