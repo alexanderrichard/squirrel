@@ -8,7 +8,7 @@ subdirectories containing the binaries are in ../../src/
 
 1) download the data:
 
-    wget -O data.zip https://uni-bonn.sciebo.de/index.php/s/ZPMsvEb8rOp6KLu/download
+    wget -O data.zip https://uni-bonn.sciebo.de/index.php/s/yt0MHmQJNzQalJR/download
     unzip data.zip
     rm data.zip
 
