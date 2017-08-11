@@ -206,15 +206,19 @@ Float SegmentScorer::segmentScore(u32 t, u32 length, u32 c) {
 		for (u32 column = 0; column < t_end_ - t_start_ + 1; column++) {
 			generateVector(t_start_ + column, t_end_, column, networkInput_);
 		}
-		network_.outputLayer().initComputation(false);
-		network_.forward(networkInput_);
-		networkInput_.finishComputation(false);
-		network_.outputLayer().finishComputation(true);
+        network_.forward(networkInput_);
+        networkInput_.finishComputation(false);
+        scores_.initComputation();
+        scores_.copyStructure(network_.outputLayer().latestActivations(0));
+        scores_.copy(network_.outputLayer().latestActivations(0));
+        scores_.finishComputation();
 	}
 
 	u32 column = (t_start - t_start_);
-	require(!logarithmizeNetworkOutput_);
-	Float segmentScore = std::log(network_.outputLayer().latestActivations(0).at(c, column)) - prior_.at(c);
+    Float segmentScore = scores_.at(c, column);
+    if (logarithmizeNetworkOutput_)
+        segmentScore = std::log(segmentScore);
+    segmentScore -= prior_.at(c);
 	if (scaleSegmentByLength_)
 		segmentScore *= length;
 	return segmentScore;
